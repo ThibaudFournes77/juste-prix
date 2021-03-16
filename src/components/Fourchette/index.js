@@ -1,6 +1,6 @@
 // == Import npm
 import { Container, Paper, Typography } from '@material-ui/core';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import Message from 'src/components/Message';
 import Propositions from 'src/components/Propositions';
 import ProposalForm from 'src/components/ProposalForm';
@@ -17,11 +17,11 @@ const Fourchette = () => {
   const [result, setResult] = useState(null);
   const [message, setMessage] = useState('Aucune proposition récente');
   const [count, setCount] = useState(0);
-  const [answer, setAnswer] = useState(null);
+  const answer = useRef(0);
 
   useEffect(() => {
     const randomValue = Math.floor(Math.random() * 100);
-    setAnswer(randomValue);
+    answer.current = randomValue;
   }, []);
 
   // Le message doit être changé une fois que le formulaire a été soumis
@@ -30,15 +30,15 @@ const Fourchette = () => {
   // => on utilise useEffect
   // et on n'a plus de problème avec la valeur de count :D
   useEffect(() => {
-    if (submittedProposal > answer && submittedProposal < maxProposal) {
+    if (submittedProposal > answer.current && submittedProposal < maxProposal) {
       setMaxProposal(submittedProposal);
       setMessage("C'est moins !");
     }
-    if (submittedProposal < answer && submittedProposal > minProposal) {
+    if (submittedProposal < answer.current && submittedProposal > minProposal) {
       setMinProposal(submittedProposal);
       setMessage("C'est plus !");
     }
-    if (submittedProposal === answer) {
+    if (submittedProposal === answer.current) {
       setResult(submittedProposal);
       setMessage(`Bravo ! Tu as trouvé le bon numéro en ${count} coups !!`);
     }
