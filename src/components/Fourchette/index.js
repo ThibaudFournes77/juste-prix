@@ -15,6 +15,7 @@ const Fourchette = () => {
   const [proposal, setProposal] = useState('');
   const [result, setResult] = useState(null);
   const [message, setMessage] = useState('Aucune proposition récente');
+  const [count, setCount] = useState(0);
   const [answer, setAnswer] = useState(null);
 
   useEffect(() => {
@@ -28,7 +29,7 @@ const Fourchette = () => {
 
   const handleSubmitForm = () => {
     const submittedValue = parseInt(proposal, 10);
-    console.log('proposal', proposal);
+    setCount(count + 1);
     if (submittedValue > answer && submittedValue < maxProposal) {
       setMaxProposal(submittedValue);
       setMessage("C'est moins !");
@@ -39,7 +40,10 @@ const Fourchette = () => {
     }
     if (submittedValue === answer) {
       setResult(submittedValue);
-      setMessage('Bravo ! Tu as trouvé le bon numéro !!');
+      setMessage(`Bravo ! Tu as trouvé le bon numéro en ${count} coups !!`);
+      // Le problème ici est que quand le message s'affiche,
+      // count a encore sa valeur d'avant le submit
+      // On pourrait mettre 1 comme valeur initiale de count mais ce serait un peu de la bidouille
     }
   };
   return (
