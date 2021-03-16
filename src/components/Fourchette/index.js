@@ -13,6 +13,7 @@ const Fourchette = () => {
   const [minProposal, setMinProposal] = useState(0);
   const [maxProposal, setMaxProposal] = useState(100);
   const [proposal, setProposal] = useState('');
+  const [submittedProposal, setSubmittedProposal] = useState(null);
   const [result, setResult] = useState(null);
   const [message, setMessage] = useState('Aucune proposition récente');
   const [count, setCount] = useState(0);
@@ -23,28 +24,34 @@ const Fourchette = () => {
     setAnswer(randomValue);
   }, []);
 
+  // Le message doit être changé une fois que le formulaire a été soumis
+  // = quand la valeur de "submittedProposal" est modifiée
+  // ça fait penser à un componentDidUpdate
+  // => on utilise useEffect
+  // et on n'a plus de problème avec la valeur de count :D
+  useEffect(() => {
+    if (submittedProposal > answer && submittedProposal < maxProposal) {
+      setMaxProposal(submittedProposal);
+      setMessage("C'est moins !");
+    }
+    if (submittedProposal < answer && submittedProposal > minProposal) {
+      setMinProposal(submittedProposal);
+      setMessage("C'est plus !");
+    }
+    if (submittedProposal === answer) {
+      setResult(submittedProposal);
+      setMessage(`Bravo ! Tu as trouvé le bon numéro en ${count} coups !!`);
+    }
+  }, [submittedProposal]);
+
   const handleProposal = (value) => {
     setProposal(value);
   };
 
   const handleSubmitForm = () => {
     const submittedValue = parseInt(proposal, 10);
+    setSubmittedProposal(submittedValue);
     setCount(count + 1);
-    if (submittedValue > answer && submittedValue < maxProposal) {
-      setMaxProposal(submittedValue);
-      setMessage("C'est moins !");
-    }
-    if (submittedValue < answer && submittedValue > minProposal) {
-      setMinProposal(submittedValue);
-      setMessage("C'est plus !");
-    }
-    if (submittedValue === answer) {
-      setResult(submittedValue);
-      setMessage(`Bravo ! Tu as trouvé le bon numéro en ${count} coups !!`);
-      // Le problème ici est que quand le message s'affiche,
-      // count a encore sa valeur d'avant le submit
-      // On pourrait mettre 1 comme valeur initiale de count mais ce serait un peu de la bidouille
-    }
   };
   return (
     <Container maxWidth="sm" className="fourchette">
