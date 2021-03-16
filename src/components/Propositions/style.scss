@@ -1,0 +1,27 @@
+@use 'src/styles/vars' as v;
+
+.propositions{
+  margin: v.$gutter * 2 v.$gutter;
+  position: relative;
+  .proposition{
+    background-color: v.$primary-color;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 3em;
+    height: 3em;
+    border-radius: 50%;
+    &.resultProposal::before {
+      content: '<';
+      position: absolute;
+      left: 33%;
+      color: v.$primary-color;
+    }
+    &.resultProposal::after{
+      content: '<';
+      position: absolute;
+      right: 33%;
+      color: v.$primary-color;
+    }
+  }
+}
